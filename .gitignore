@@ -1,0 +1,131 @@
+# Laravel específico
+/vendor/
+/node_modules/
+/public/hot
+/public/storage
+/storage/*.key
+/storage/app/public/*
+!/storage/app/public/.gitkeep
+/storage/framework/cache/data/*
+!/storage/framework/cache/data/.gitkeep
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+/storage/framework/testing/*
+!/storage/framework/testing/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# Archivos de configuración sensibles
+.env
+.env.backup
+.env.production
+.env.local
+.env.example
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+
+# Composer
+composer.lock
+/vendor/
+
+# NPM/Yarn
+/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Build outputs
+/public/build/
+/public/mix-manifest.json
+/public/css/
+/public/js/
+/public/fonts/
+
+# IDE y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Archivos de sistema
+*.log
+*.tmp
+*.temp
+.cache/
+.sass-cache/
+
+# Archivos de backup
+*.bak
+*.backup
+*.old
+
+# Archivos de testing
+/coverage/
+.phpunit.result.cache
+
+# Archivos específicos del proyecto
+/public/uploads/
+/public/images/libros/
+/storage/app/uploads/
+
+# Archivos de documentación generados
+/docs/build/
+
+# Archivos de configuración local
+phpunit.xml
+.phpstorm.meta.php
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+
+# Archivos de Laravel Telescope (si se usa)
+/storage/telescope/
+
+# Archivos de Laravel Horizon (si se usa)
+/storage/horizon/
+
+# Archivos de certificados SSL
+*.pem
+*.key
+*.crt
+
+# Archivos de base de datos SQLite
+*.sqlite
+*.sqlite3
+database.sqlite
+
+# Archivos de migración temporal
+/database/migrations/*_temp.php
+
+# Archivos de seeder con datos sensibles
+/database/seeders/*Production*.php
+
+# Archivos de configuración de servidor
+.htaccess.backup
+nginx.conf
+apache.conf
+
+# Archivos de monitoreo
+/storage/debugbar/
+
+# Archivos de caché de rutas y configuración
+/bootstrap/cache/*.php
+!/bootstrap/cache/.gitkeep
+
+# Archivos de sesiones si usas driver file
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+
+# Archivos de vistas compiladas
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep

@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class BibliotecarioMiddleware
+{
+    public function handle(Request $request, Closure $next)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
+        $user = Auth::user();
+        
+        if (!in_array($user->tipo_usuario, ['bibliotecario', 'admin'])) {
+            abort(403, 'No tienes permisos para acceder a esta sección.');
+        }
+        
+        return $next($request);
+    }
+}
