@@ -17,7 +17,8 @@ class BibliotecarioMiddleware
         $user = Auth::user();
         
         if (!in_array($user->tipo_usuario, ['bibliotecario', 'admin'])) {
-            abort(403, 'No tienes permisos para acceder a esta sección.');
+            return redirect()->route('home')
+                ->with('error', 'No tienes permisos para acceder a esta sección. Solo administradores.');
         }
         
         return $next($request);

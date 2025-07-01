@@ -137,4 +137,60 @@ class LibroController extends Controller
         return redirect()->route('libros.index')
             ->with('success', 'Libro eliminado exitosamente.');
     }
+
+    public function catalogo(Request $request)
+    {
+        $query = Libro::with(['autor', 'categoria'])
+            ->where('estado', 'activo');
+        
+        if ($request->has('buscar') && $request->buscar) {
+            $query->buscar($request->buscar);
+        }
+        
+        if ($request->has('categoria') && $request->categoria) {
+            $query->where('categoria_id', $request->categoria);
+        }
+        
+        if ($request->has('disponibles') && $request->disponibles) {
+            $query->disponibles();
+        }
+        
+        $libros = $query->paginate(12);
+        $categorias = Categoria::all();
+        
+        return view('catalogo.index', compact('libros', 'categorias'));
+    }
+    
+    public function mostrarPublico(Libro $libro)
+    {
+        $libro->load(['autor', 'categoria']);
+        
+        // Libros relacionados (misma categoría)
+        $librosRelacionados = Libro::where('categoria_id', $libro->categoria_id)
+            ->where('id', '!=', $libro->id)
+            ->where('estado', 'activo')
+            ->with(['autor'])
+            ->take(4)
+            ->get();
+        
+        return view('catalogo.show', compact('libro', 'librosRelacionados'));
+    }
+    
+    public function buscarPublico(Request $request)
+    {
+        $termino = $request->get('q');
+        
+        if (!$termino) {
+            return redirect()->route('catalogo.index');
+        }
+        
+        $libros = Libro::with(['autor', 'categoria'])
+            ->where('estado', 'activo')
+            ->buscar($termino)
+            ->paginate(12);
+        
+        $categorias = Categoria::all();
+        
+        return view('catalogo.buscar', compact('libros', 'categorias', 'termino'));
+    }
 }

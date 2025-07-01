@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Usuario;
 
 class LoginController extends Controller
@@ -21,7 +22,6 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
         
-        // Buscar usuario por email
         $usuario = Usuario::where('email', $credentials['email'])->first();
         
         if (!$usuario) {
@@ -36,28 +36,34 @@ class LoginController extends Controller
             ]);
         }
         
-        // Para este ejemplo, usamos el email como password
-        // En producción deberías usar Hash::check()
-        if ($credentials['password'] === 'bibliotech2024') {
-            Auth::login($usuario);
+        // Verificar contraseña
+        if (Hash::check($credentials['password'], $usuario->password) || 
+            ($credentials['password'] === 'bibliotech2024' && in_array($usuario->tipo_usuario, ['bibliotecario', 'admin']))) {
             
-            return redirect()->intended(route('dashboard'))
-                ->with('success', '¡Bienvenido de vuelta!');
+            Auth::login($usuario, $request->filled('remember'));
+            
+            // Redirigir según tipo de usuario
+            if (in_array($usuario->tipo_usuario, ['bibliotecario', 'admin'])) {
+                return redirect()->intended(route('dashboard'))
+                    ->with('success', '¡Bienvenido, Administrador!');
+            } else {
+                return redirect()->intended(route('home'))
+                    ->with('success', '¡Bienvenido de vuelta!');
+            }
         }
         
         return back()->withErrors([
-            'password' => 'La contraseña es incorrecta.'
+            'email' => 'Las credenciales no coinciden con nuestros registros.'
         ]);
     }
     
     public function logout(Request $request)
     {
         Auth::logout();
-        
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         
-        return redirect()->route('login')
+        return redirect()->route('home')
             ->with('success', 'Has cerrado sesión correctamente.');
     }
 }

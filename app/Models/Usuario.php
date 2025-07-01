@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 
 class Usuario extends Authenticatable
 {
@@ -15,6 +16,7 @@ class Usuario extends Authenticatable
         'nombre',
         'apellido',
         'email',
+        'password',
         'telefono',
         'direccion',
         'tipo_usuario',
@@ -23,9 +25,15 @@ class Usuario extends Authenticatable
         'multa_pendiente'
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     protected $casts = [
         'fecha_registro' => 'date',
-        'multa_pendiente' => 'decimal:2'
+        'multa_pendiente' => 'decimal:2',
+        'password' => 'hashed',
     ];
 
     public function prestamos()
@@ -58,5 +66,10 @@ class Usuario extends Authenticatable
     public function scopeActivos($query)
     {
         return $query->where('estado', 'activo');
+    }
+    
+    public function esAdministrador()
+    {
+        return in_array($this->tipo_usuario, ['bibliotecario', 'admin']);
     }
 }

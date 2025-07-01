@@ -8,21 +8,29 @@ use App\Http\Controllers\PrestamoController;
 use App\Http\Controllers\AutorController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\HomeController;
 
-// Página principal
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+// Página principal pública (Landing Page)
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Autenticación
-Route::middleware(['auth'])->group(function () {
+// Catálogo público
+Route::prefix('catalogo')->name('catalogo.')->group(function () {
+    Route::get('/', [LibroController::class, 'catalogo'])->name('index');
+    Route::get('/libro/{libro}', [LibroController::class, 'mostrarPublico'])->name('libro');
+    Route::get('/buscar', [LibroController::class, 'buscarPublico'])->name('buscar');
+});
+
+// Rutas protegidas para administradores
+Route::middleware(['auth', 'bibliotecario'])->group(function () {
+    // Dashboard (solo administradores)
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    // Dashboard  Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
-    // Libros
+    // Gestión de libros (administradores)
     Route::resource('libros', LibroController::class);
     Route::get('/libros/{libro}/disponibilidad', [LibroController::class, 'disponibilidad'])
         ->name('libros.disponibilidad');
     
-    // Usuarios
+    // Gestión de usuarios
     Route::resource('usuarios', UsuarioController::class);
     Route::patch('/usuarios/{usuario}/multa', [UsuarioController::class, 'pagarMulta'])
         ->name('usuarios.pagar-multa');
@@ -62,12 +70,11 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-// Rutas públicas (catálogo)
-Route::prefix('catalogo')->name('catalogo.')->group(function () {
-    Route::get('/', [LibroController::class, 'catalogo'])->name('index');
-    Route::get('/libro/{libro}', [LibroController::class, 'mostrarPublico'])
-        ->name('libro');
-    Route::get('/buscar', [LibroController::class, 'buscarPublico'])
-        ->name('buscar');
+// Rutas para usuarios autenticados (no administradores)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/mi-perfil', [UsuarioController::class, 'perfil'])->name('perfil');
+    Route::patch('/mi-perfil', [UsuarioController::class, 'actualizarPerfil'])->name('perfil.actualizar');
+    Route::get('/mis-prestamos', [PrestamoController::class, 'misPrestamos'])->name('mis-prestamos');
 });
 
+require __DIR__.'/auth.php';
