@@ -14,7 +14,7 @@ class BibliotecarioMiddleware
             return redirect()->route('login');
         }
         
-        $user = Auth::user();
+        $user = Auth::user(); // Cambiar de Auth::Usuario() a Auth::user()
         
         if (!in_array($user->tipo_usuario, ['bibliotecario', 'admin'])) {
             return redirect()->route('home')

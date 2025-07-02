@@ -9,28 +9,12 @@
         <div class="hero-content">
             <div class="hero-text">
                 <h1 class="hero-title">Bienvenido a BiblioTech</h1>
-                <p class="hero-subtitle">Tu biblioteca digital moderna. Explora, descubre y gestiona tu conocimiento de manera inteligente.</p>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number">{{ number_format($totalLibros) }}</span>
-                        <span class="stat-label">Libros Disponibles</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">{{ number_format($totalCategorias) }}</span>
-                        <span class="stat-label">Categorías</span>
-                    </div>
-                </div>
+                <p class="hero-subtitle">Tu biblioteca digital. Explora y descubre nuevos títulos</p>
                 <div class="hero-actions">
                     <a href="{{ route('catalogo.index') }}" class="btn btn-primary btn-lg">
                         <i class="fas fa-search"></i>
                         Explorar Catálogo
                     </a>
-                    @guest
-                        <a href="{{ route('register') }}" class="btn btn-outline btn-lg">
-                            <i class="fas fa-user-plus"></i>
-                            Registrarse
-                        </a>
-                    @endguest
                 </div>
             </div>
             <div class="hero-image">

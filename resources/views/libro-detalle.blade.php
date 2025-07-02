@@ -6,171 +6,201 @@
 <div class="container mx-auto px-4 py-8">
     <!-- Breadcrumb -->
     <nav class="mb-8">
-        <ol class="flex items-center space-x-2 text-sm text-gray-600">
-            <li><a href="{{ route('home') }}" class="hover:text-blue-600">Inicio</a></li>
-            <li><i class="fas fa-chevron-right text-xs"></i></li>
-            <li><a href="{{ route('catalogo.publico') }}" class="hover:text-blue-600">Catálogo</a></li>
-            <li><i class="fas fa-chevron-right text-xs"></i></li>
-            <li class="text-gray-800">{{ $libro->titulo }}</li>
+        <ol style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--secondary);">
+            <li><a href="{{ route('home') }}" style="color: var(--primary); text-decoration: none;">Inicio</a></li>
+            <li><i class="fas fa-chevron-right" style="font-size: 0.75rem;"></i></li>
+            <li><a href="{{ route('catalogo.index') }}" style="color: var(--primary); text-decoration: none;">Catálogo</a></li>
+            <li><i class="fas fa-chevron-right" style="font-size: 0.75rem;"></i></li>
+            <li style="color: var(--dark);">{{ $libro->titulo }}</li>
         </ol>
     </nav>
 
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
-            <!-- Imagen del libro -->
-            <div class="lg:col-span-1">
-                <div class="aspect-w-3 aspect-h-4 bg-gray-200 rounded-lg overflow-hidden">
-                    @if($libro->imagen)
-                        <img src="{{ asset('storage/libros/' . $libro->imagen) }}" 
-                             alt="{{ $libro->titulo }}"
-                             class="w-full h-full object-cover">
-                    @else
-                        <div class="flex items-center justify-center h-96">
-                            <i class="fas fa-book text-8xl text-gray-400"></i>
+    <div style="background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); overflow: hidden;">
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; padding: 2rem;">
+            @media (min-width: 1024px) {
+                <style>
+                .libro-grid {
+                    grid-template-columns: 1fr 2fr !important;
+                }
+                </style>
+            }
+            
+            <div class="libro-grid" style="display: grid; gap: 2rem;">
+                <!-- Imagen del libro -->
+                <div>
+                    <div style="aspect-ratio: 3/4; background: #f3f4f6; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        @if($libro->imagen_portada)
+                            <img src="{{ $libro->imagen_portada }}" 
+                                 alt="{{ $libro->titulo }}"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <img src="https://via.placeholder.com/400x600/e5e7eb/6b7280?text={{ urlencode($libro->titulo) }}" 
+                                 alt="{{ $libro->titulo }}"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Información del libro -->
+                <div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h1 style="font-size: 2rem; font-weight: 700; color: var(--dark); margin-bottom: 1rem;">{{ $libro->titulo }}</h1>
+                        
+                        <!-- Estado -->
+                        <div style="margin-bottom: 1rem;">
+                            @if($libro->cantidad_disponible > 0)
+                                <span style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.875rem; font-weight: 500; background: #dcfce7; color: #166534;">
+                                    <i class="fas fa-check-circle"></i>
+                                    Disponible ({{ $libro->cantidad_disponible }} copias)
+                                </span>
+                            @else
+                                <span style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.875rem; font-weight: 500; background: #fee2e2; color: #dc2626;">
+                                    <i class="fas fa-times-circle"></i>
+                                    No disponible
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Detalles -->
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                        @media (min-width: 768px) {
+                            <style>
+                            .detalles-grid {
+                                grid-template-columns: 1fr 1fr !important;
+                            }
+                            </style>
+                        }
+                        
+                        <div class="detalles-grid" style="display: grid; gap: 1.5rem;">
+                            <div>
+                                <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--dark); margin-bottom: 1rem;">Información del libro</h3>
+                                <dl style="display: grid; gap: 0.75rem;">
+                                    <div>
+                                        <dt style="font-size: 0.875rem; font-weight: 500; color: var(--secondary);">Autor</dt>
+                                        <dd style="font-size: 0.875rem; color: var(--dark);">{{ $libro->autor->nombre }} {{ $libro->autor->apellido }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt style="font-size: 0.875rem; font-weight: 500; color: var(--secondary);">Categoría</dt>
+                                        <dd style="font-size: 0.875rem; color: var(--dark);">{{ $libro->categoria->nombre }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt style="font-size: 0.875rem; font-weight: 500; color: var(--secondary);">Editorial</dt>
+                                        <dd style="font-size: 0.875rem; color: var(--dark);">{{ $libro->editorial ?? 'No disponible' }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt style="font-size: 0.875rem; font-weight: 500; color: var(--secondary);">ISBN</dt>
+                                        <dd style="font-size: 0.875rem; color: var(--dark);">{{ $libro->isbn ?? 'No disponible' }}</dd>
+                                    </div>
+                                </dl>
+                            </div>
+
+                            <div>
+                                <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--dark); margin-bottom: 1rem;">Detalles adicionales</h3>
+                                <dl style="display: grid; gap: 0.75rem;">
+                                    <div>
+                                        <dt style="font-size: 0.875rem; font-weight: 500; color: var(--secondary);">Año de publicación</dt>
+                                        <dd style="font-size: 0.875rem; color: var(--dark);">{{ $libro->año_publicacion ?? 'No disponible' }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt style="font-size: 0.875rem; font-weight: 500; color: var(--secondary);">Número de páginas</dt>
+                                        <dd style="font-size: 0.875rem; color: var(--dark);">{{ $libro->numero_paginas ?? 'No disponible' }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt style="font-size: 0.875rem; font-weight: 500; color: var(--secondary);">Ubicación</dt>
+                                        <dd style="font-size: 0.875rem; color: var(--dark);">{{ $libro->ubicacion ?? 'No disponible' }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt style="font-size: 0.875rem; font-weight: 500; color: var(--secondary);">Nacionalidad del autor</dt>
+                                        <dd style="font-size: 0.875rem; color: var(--dark);">{{ $libro->autor->nacionalidad ?? 'No disponible' }}</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Descripción -->
+                    @if($libro->descripcion)
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--dark); margin-bottom: 1rem;">Descripción</h3>
+                            <p style="color: var(--secondary); line-height: 1.6;">{{ $libro->descripcion }}</p>
                         </div>
                     @endif
-                </div>
-            </div>
 
-            <!-- Información del libro -->
-            <div class="lg:col-span-2">
-                <div class="mb-6">
-                    <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ $libro->titulo }}</h1>
-                    
-                    <!-- Estado -->
-                    <div class="mb-4">
-                        @if($libro->estado == 'disponible')
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                                <i class="fas fa-check-circle mr-2"></i>
-                                Disponible
-                            </span>
-                        @else
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                                <i class="fas fa-times-circle mr-2"></i>
-                                Prestado
-                            </span>
-                        @endif
+                    <!-- Biografía del autor -->
+                    @if($libro->autor->biografia)
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--dark); margin-bottom: 1rem;">Sobre el autor</h3>
+                            <p style="color: var(--secondary); line-height: 1.6;">{{ $libro->autor->biografia }}</p>
+                        </div>
+                    @endif
+
+                    <!-- Acciones -->
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        @media (min-width: 640px) {
+                            <style>
+                            .acciones-flex {
+                                flex-direction: row !important;
+                            }
+                            </style>
+                        }
+                        
+                        <div class="acciones-flex" style="display: flex; gap: 1rem;">
+                            @auth
+                                @if($libro->cantidad_disponible > 0)
+                                    <button style="background: var(--success); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-book-reader"></i>
+                                        Solicitar préstamo
+                                    </button>
+                                @else
+                                    <button disabled style="background: #9ca3af; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: not-allowed; display: flex; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-times-circle"></i>
+                                        No disponible
+                                    </button>
+                                @endif
+                            @else
+                                <a href="{{ route('login') }}" 
+                                   style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 500; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    Inicia sesión para solicitar
+                                </a>
+                            @endauth
+                            
+                            <a href="{{ route('catalogo.index') }}" 
+                               style="background: #6b7280; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 500; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-arrow-left"></i>
+                                Volver al catálogo
+                            </a>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Detalles -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Información del libro</h3>
-                        <dl class="space-y-3">
-                            <div>
-                                <dt class="text-sm font-medium text-gray-600">Autor</dt>
-                                <dd class="text-sm text-gray-800">{{ $libro->autor->nombre }} {{ $libro->autor->apellido }}</dd>
-                            </div>
-                            <div>
-                                <dt class="text-sm font-medium text-gray-600">Categoría</dt>
-                                <dd class="text-sm text-gray-800">{{ $libro->categoria->nombre }}</dd>
-                            </div>
-                            <div>
-                                <dt class="text-sm font-medium text-gray-600">Editorial</dt>
-                                <dd class="text-sm text-gray-800">{{ $libro->editorial }}</dd>
-                            </div>
-                            <div>
-                                <dt class="text-sm font-medium text-gray-600">ISBN</dt>
-                                <dd class="text-sm text-gray-800">{{ $libro->isbn }}</dd>
-                            </div>
-                        </dl>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Detalles adicionales</h3>
-                        <dl class="space-y-3">
-                            <div>
-                                <dt class="text-sm font-medium text-gray-600">Fecha de publicación</dt>
-                                <dd class="text-sm text-gray-800">
-                                    {{ $libro->fecha_publicacion ? $libro->fecha_publicacion->format('d/m/Y') : 'No disponible' }}
-                                </dd>
-                            </div>
-                            <div>
-                                <dt class="text-sm font-medium text-gray-600">Número de páginas</dt>
-                                <dd class="text-sm text-gray-800">{{ $libro->numero_paginas ?? 'No disponible' }}</dd>
-                            </div>
-                            <div>
-                                <dt class="text-sm font-medium text-gray-600">Ubicación</dt>
-                                <dd class="text-sm text-gray-800">{{ $libro->ubicacion }}</dd>
-                            </div>
-                            <div>
-                                <dt class="text-sm font-medium text-gray-600">Nacionalidad del autor</dt>
-                                <dd class="text-sm text-gray-800">{{ $libro->autor->nacionalidad }}</dd>
-                            </div>
-                        </dl>
-                    </div>
-                </div>
-
-                <!-- Descripción -->
-                @if($libro->descripcion)
-                    <div class="mb-8">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Descripción</h3>
-                        <p class="text-gray-700 leading-relaxed">{{ $libro->descripcion }}</p>
-                    </div>
-                @endif
-
-                <!-- Biografía del autor -->
-                @if($libro->autor->biografia)
-                    <div class="mb-8">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Sobre el autor</h3>
-                        <p class="text-gray-700 leading-relaxed">{{ $libro->autor->biografia }}</p>
-                    </div>
-                @endif
-
-                <!-- Acciones -->
-                <div class="flex flex-col sm:flex-row gap-4">
-                    @auth
-                        @if($libro->estado == 'disponible')
-                            <button class="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition duration-200 flex items-center justify-center">
-                                <i class="fas fa-book-reader mr-2"></i>
-                                Solicitar préstamo
-                            </button>
-                        @else
-                            <button disabled class="bg-gray-400 text-white px-6 py-3 rounded-md cursor-not-allowed flex items-center justify-center">
-                                <i class="fas fa-times-circle mr-2"></i>
-                                No disponible
-                            </button>
-                        @endif
-                    @else
-                        <a href="{{ route('login') }}" 
-                           class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-200 flex items-center justify-center">
-                            <i class="fas fa-sign-in-alt mr-2"></i>
-                            Inicia sesión para solicitar
-                        </a>
-                    @endauth
-                    
-                    <a href="{{ route('catalogo.publico') }}" 
-                       class="bg-gray-600 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition duration-200 flex items-center justify-center">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Volver al catálogo
-                    </a>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Libros relacionados -->
-    @if($librosRelacionados->count() > 0)
-        <div class="mt-12">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Libros relacionados</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    @if(isset($librosRelacionados) && $librosRelacionados->count() > 0)
+        <div style="margin-top: 3rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--dark); margin-bottom: 1.5rem;">Libros relacionados</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
                 @foreach($librosRelacionados as $relacionado)
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-200">
-                        <div class="h-32 bg-gray-200 flex items-center justify-center">
-                            @if($relacionado->imagen)
-                                <img src="{{ asset('storage/libros/' . $relacionado->imagen) }}" 
+                    <div style="background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; transition: all 0.2s;">
+                        <div style="height: 8rem; background: #f3f4f6; display: flex; align-items: center; justify-content: center;">
+                            @if($relacionado->imagen_portada)
+                                <img src="{{ $relacionado->imagen_portada }}" 
                                      alt="{{ $relacionado->titulo }}"
-                                     class="h-full w-full object-cover">
+                                     style="height: 100%; width: 100%; object-fit: cover;">
                             @else
-                                <i class="fas fa-book text-2xl text-gray-400"></i>
+                                <img src="https://via.placeholder.com/200x120/e5e7eb/6b7280?text={{ urlencode(substr($relacionado->titulo, 0, 20)) }}" 
+                                     alt="{{ $relacionado->titulo }}"
+                                     style="height: 100%; width: 100%; object-fit: cover;">
                             @endif
                         </div>
-                        <div class="p-4">
-                            <h3 class="font-semibold text-gray-800 mb-2 line-clamp-2">{{ $relacionado->titulo }}</h3>
-                            <p class="text-gray-600 text-sm mb-2">{{ $relacionado->autor->nombre }} {{ $relacionado->autor->apellido }}</p>
-                            <a href="{{ route('libro.publico', $relacionado->id) }}" 
-                               class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        <div style="padding: 1rem;">
+                            <h3 style="font-weight: 600; color: var(--dark); margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $relacionado->titulo }}</h3>
+                            <p style="color: var(--secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">{{ $relacionado->autor->nombre }} {{ $relacionado->autor->apellido }}</p>
+                            <a href="{{ route('catalogo.libro', $relacionado) }}" 
+                               style="color: var(--primary); font-size: 0.875rem; font-weight: 500; text-decoration: none;">
                                 Ver detalles →
                             </a>
                         </div>

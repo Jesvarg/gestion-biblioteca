@@ -11,7 +11,7 @@
 
     <!-- Filtros y búsqueda -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <form method="GET" action="{{ route('catalogo.publico') }}" class="space-y-4">
+        <form method="GET" action="{{ route('catalogo.index') }}" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Búsqueda -->
                 <div>
@@ -58,7 +58,7 @@
                         class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-200">
                     <i class="fas fa-search mr-2"></i>Buscar
                 </button>
-                <a href="{{ route('catalogo.publico') }}" 
+                <a href="{{ route('catalogo.index') }}" 
                    class="text-gray-600 hover:text-gray-800 transition duration-200">
                     <i class="fas fa-times mr-1"></i>Limpiar filtros
                 </a>
@@ -79,12 +79,14 @@
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-200">
                     <!-- Imagen del libro -->
                     <div class="h-48 bg-gray-200 flex items-center justify-center">
-                        @if($libro->imagen)
-                            <img src="{{ asset('storage/libros/' . $libro->imagen) }}" 
+                        @if($libro->imagen_portada)
+                            <img src="{{ $libro->imagen_portada }}" 
                                  alt="{{ $libro->titulo }}"
                                  class="h-full w-full object-cover">
                         @else
-                            <i class="fas fa-book text-4xl text-gray-400"></i>
+                            <img src="https://via.placeholder.com/300x400/e5e7eb/6b7280?text={{ urlencode($libro->titulo) }}" 
+                                 alt="{{ $libro->titulo }}"
+                                 class="h-full w-full object-cover">
                         @endif
                     </div>
 
@@ -101,26 +103,26 @@
                         </p>
                         <p class="text-gray-600 text-sm mb-3">
                             <i class="fas fa-calendar mr-1"></i>
-                            {{ $libro->fecha_publicacion ? $libro->fecha_publicacion->format('Y') : 'N/A' }}
+                            {{ $libro->año_publicacion ?? 'N/A' }}
                         </p>
 
                         <!-- Estado -->
                         <div class="mb-3">
-                            @if($libro->estado == 'disponible')
+                            @if($libro->cantidad_disponible > 0)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                     <i class="fas fa-check-circle mr-1"></i>
-                                    Disponible
+                                    Disponible ({{ $libro->cantidad_disponible }})
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                     <i class="fas fa-times-circle mr-1"></i>
-                                    Prestado
+                                    No disponible
                                 </span>
                             @endif
                         </div>
 
-                        <!-- Botón ver detalles -->
-                        <a href="{{ route('libro.publico', $libro->id) }}" 
+                        <!-- Botón ver detalles - CORREGIR RUTA -->
+                        <a href="{{ route('catalogo.libro', $libro) }}" 
                            class="w-full bg-blue-600 text-white text-center py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200 inline-block">
                             <i class="fas fa-eye mr-2"></i>Ver detalles
                         </a>
@@ -138,7 +140,7 @@
             <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
             <h3 class="text-xl font-semibold text-gray-600 mb-2">No se encontraron libros</h3>
             <p class="text-gray-500 mb-4">Intenta ajustar los filtros de búsqueda</p>
-            <a href="{{ route('catalogo.publico') }}" 
+            <a href="{{ route('catalogo.index') }}" 
                class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-200">
                 Ver todos los libros
             </a>
