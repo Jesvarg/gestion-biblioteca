@@ -123,14 +123,15 @@
             <div class="card-body text-center">
                 @if($libro->imagen_portada)
                     <img src="{{ Storage::url($libro->imagen_portada) }}" alt="{{ $libro->titulo }}" 
-                         class="w-full max-w-xs mx-auto rounded-lg shadow-md">
+                         class="w-full max-w-xs mx-auto rounded-lg shadow-md mb-4"
+                         style="max-height: 400px; object-fit: cover;">
                 @else
-                    <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-book text-4xl text-gray-400"></i>
                     </div>
                 @endif
                 
-                <div class="mt-4 space-y-2">
+                <div class="space-y-3">
                     @if($libro->estaDisponible())
                         <a href="{{ route('prestamos.create', ['libro' => $libro->id]) }}" class="btn btn-primary w-full">
                             <i class="fas fa-hand-holding"></i>
@@ -143,7 +144,7 @@
                         Editar Libro
                     </a>
                     
-                    <form action="{{ route('libros.destroy', $libro) }}" method="POST" class="inline w-full">
+                    <form action="{{ route('libros.destroy', $libro) }}" method="POST" class="w-full">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger w-full" 

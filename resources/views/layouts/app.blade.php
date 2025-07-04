@@ -391,10 +391,24 @@
                         <i class="fas fa-exchange-alt"></i>
                         Préstamos
                     </a>
-                    <a href="{{ route('reportes.index') }}" class="nav-link {{ request()->routeIs('reportes.*') ? 'active' : '' }}">
-                        <i class="fas fa-chart-bar"></i>
-                        Reportes
-                    </a>
+                    
+                    <!-- Dropdown de usuario -->
+                    <div style="position: relative; display: inline-block;">
+                        <button onclick="toggleDropdown()" class="nav-link" style="background: none; border: none; cursor: pointer;">
+                            <i class="fas fa-user-circle"></i>
+                            {{ auth()->user()->nombre ?? 'Admin' }}
+                            <i class="fas fa-chevron-down" style="font-size: 0.8rem; margin-left: 0.25rem;"></i>
+                        </button>
+                        <div id="userDropdown" style="display: none; position: absolute; right: 0; top: 100%; background: white; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 150px; z-index: 1000;">
+                            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                                @csrf
+                                <button type="submit" style="width: 100%; padding: 0.75rem 1rem; background: none; border: none; text-align: left; color: var(--danger); cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Cerrar Sesión
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </nav>
             </div>
         </div>
@@ -431,6 +445,22 @@
     
     <!-- Scripts -->
     <script>
+        // Función para el dropdown de usuario
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        // Cerrar dropdown al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            const button = event.target.closest('button');
+            
+            if (!button || button.getAttribute('onclick') !== 'toggleDropdown()') {
+                dropdown.style.display = 'none';
+            }
+        });
+        
         // Auto-hide alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
             const alerts = document.querySelectorAll('.alert');

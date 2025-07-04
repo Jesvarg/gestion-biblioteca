@@ -100,8 +100,31 @@ class UsuarioController extends Controller
             ->with('success', 'Usuario actualizado exitosamente.');
     }
 
+    public function bloquear(Usuario $usuario)
+    {
+        if ($usuario->tipo_usuario === 'admin') {
+            return redirect()->back()->with('error', 'No se puede bloquear un administrador.');
+        }
+        
+        $usuario->update(['estado' => 'suspendido']);
+        
+        return redirect()->back()->with('success', 'Usuario bloqueado exitosamente.');
+    }
+    
+    public function activar(Usuario $usuario)
+    {
+        $usuario->update(['estado' => 'activo']);
+        
+        return redirect()->back()->with('success', 'Usuario activado exitosamente.');
+    }
+    
     public function destroy(Usuario $usuario)
     {
+        if ($usuario->tipo_usuario === 'admin') {
+            return redirect()->route('usuarios.index')
+                ->with('error', 'No se puede eliminar un administrador.');
+        }
+        
         if ($usuario->prestamos()->activos()->exists()) {
             return redirect()->route('usuarios.index')
                 ->with('error', 'No se puede eliminar un usuario con préstamos activos.');

@@ -39,6 +39,7 @@
                 <select name="disponibles" class="form-control">
                     <option value="">Todos los estados</option>
                     <option value="1" {{ request('disponibles') == '1' ? 'selected' : '' }}>Solo disponibles</option>
+                    <option value="0" {{ request('disponibles') == '0' ? 'selected' : '' }}>Solo prestados</option>
                 </select>
             </div>
             
@@ -102,11 +103,11 @@
                 </div>
                 
                 <div class="flex gap-2">
-                    <a href="{{ route('libros.show', $libro) }}" class="btn btn-outline" style="flex: 1; font-size: 0.875rem;">
+                    <a href="{{ route('libros.show', $libro) }}" class="btn btn-outline btn-hover" style="flex: 1; font-size: 0.875rem;">
                         <i class="fas fa-eye"></i>
                         Ver
                     </a>
-                    <a href="{{ route('libros.edit', $libro) }}" class="btn btn-secondary" style="flex: 1; font-size: 0.875rem;">
+                    <a href="{{ route('libros.edit', $libro) }}" class="btn btn-secondary btn-hover" style="flex: 1; font-size: 0.875rem;">
                         <i class="fas fa-edit"></i>
                         Editar
                     </a>
@@ -140,6 +141,27 @@
 
 @push('styles')
 <style>
+    .btn-hover {
+        transition: all 0.3s ease;
+        transform: translateY(0);
+    }
+    
+    .btn-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-outline.btn-hover:hover {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+    
+    .btn-secondary.btn-hover:hover {
+        background: #4b5563;
+        transform: translateY(-2px);
+    }
+    
     .pagination {
         display: flex;
         justify-content: center;

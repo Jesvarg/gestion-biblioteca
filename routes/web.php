@@ -7,7 +7,6 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\PrestamoController;
 use App\Http\Controllers\AutorController;
 use App\Http\Controllers\CategoriaController;
-use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\HomeController;
 
 // Página principal pública (Landing Page)
@@ -32,11 +31,15 @@ Route::middleware(['auth', 'bibliotecario'])->group(function () {
     
     // Gestión de usuarios
     Route::resource('usuarios', UsuarioController::class);
+    Route::patch('/usuarios/{usuario}/bloquear', [UsuarioController::class, 'bloquear'])
+        ->name('usuarios.bloquear');
+    Route::patch('/usuarios/{usuario}/activar', [UsuarioController::class, 'activar'])
+        ->name('usuarios.activar');
     Route::patch('/usuarios/{usuario}/multa', [UsuarioController::class, 'pagarMulta'])
         ->name('usuarios.pagar-multa');
     
     // Préstamos
-    Route::resource('prestamos', PrestamoController::class)->except(['edit', 'update', 'destroy']);
+    Route::resource('prestamos', PrestamoController::class);
     Route::patch('/prestamos/{prestamo}/devolver', [PrestamoController::class, 'devolver'])
         ->name('prestamos.devolver');
     Route::patch('/prestamos/{prestamo}/renovar', [PrestamoController::class, 'renovar'])
@@ -47,19 +50,6 @@ Route::middleware(['auth', 'bibliotecario'])->group(function () {
     
     // Categorías
     Route::resource('categorias', CategoriaController::class);
-    
-    // Reportes
-    Route::prefix('reportes')->name('reportes.')->group(function () {
-        Route::get('/', [ReporteController::class, 'index'])->name('index');
-        Route::get('/prestamos-vencidos', [ReporteController::class, 'prestamosVencidos'])
-            ->name('prestamos-vencidos');
-        Route::get('/libros-populares', [ReporteController::class, 'librosPopulares'])
-            ->name('libros-populares');
-        Route::get('/usuarios-morosos', [ReporteController::class, 'usuariosMorosos'])
-            ->name('usuarios-morosos');
-        Route::get('/estadisticas', [ReporteController::class, 'estadisticas'])
-            ->name('estadisticas');
-    });
     
     // API para búsquedas AJAX
     Route::prefix('api')->name('api.')->group(function () {

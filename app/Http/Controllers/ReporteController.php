@@ -13,7 +13,18 @@ class ReporteController extends Controller
 {
     public function index()
     {
-        return view('reportes.index');
+        // Obtener estadísticas para mostrar en la vista
+        $totalLibros = Libro::count();
+        $totalUsuarios = Usuario::count();
+        $prestamosActivos = Prestamo::where('estado', 'activo')->count();
+        $prestamosVencidos = Prestamo::vencidos()->count();
+        
+        return view('reportes.index', compact(
+            'totalLibros',
+            'totalUsuarios', 
+            'prestamosActivos',
+            'prestamosVencidos'
+        ));
     }
 
     public function prestamosVencidos()

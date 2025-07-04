@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'BiblioTech')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
         :root {
@@ -219,6 +220,14 @@
             font-size: 1.5rem;
             color: var(--secondary);
             cursor: pointer;
+        }
+        
+        /* Tailwind compatibility */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
         
         @media (max-width: 768px) {
