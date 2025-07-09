@@ -89,7 +89,7 @@
                                 </td>
                                 <td>
                                     <div class="actions-cell">
-                                        <a href="{{ route('usuarios.show', $usuario) }}" class="btn btn-sm btn-outline" title="Ver">
+                                        <a href="{{ route('usuarios.show', $usuario) }}" class="btn btn-sm btn-outline " title="Ver">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         
@@ -119,10 +119,6 @@
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
-                                        @else
-                                            <a href="{{ route('usuarios.edit', $usuario) }}" class="btn btn-sm btn-secondary" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
                                         @endif
                                     </div>
                                 </td>

@@ -65,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mi-perfil', [UsuarioController::class, 'perfil'])->name('perfil');
     Route::patch('/mi-perfil', [UsuarioController::class, 'actualizarPerfil'])->name('perfil.actualizar');
     Route::get('/mis-prestamos', [PrestamoController::class, 'misPrestamos'])->name('mis-prestamos');
+    Route::post('/solicitar-prestamo/{libro}', [PrestamoController::class, 'solicitarPrestamo'])->name('solicitar-prestamo');
 });
 
 require __DIR__.'/auth.php';

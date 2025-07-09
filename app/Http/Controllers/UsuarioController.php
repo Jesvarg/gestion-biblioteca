@@ -135,4 +135,34 @@ class UsuarioController extends Controller
         return redirect()->route('usuarios.index')
             ->with('success', 'Usuario eliminado exitosamente.');
     }
+
+    public function perfil()
+    {
+        $usuario = auth()->user();
+        $usuario->load(['prestamos.libro']);
+        
+        $prestamosActivos = $usuario->prestamos()->activos()->with('libro')->get();
+        $historialPrestamos = $usuario->prestamos()->with('libro')
+            ->orderBy('created_at', 'desc')->take(10)->get();
+        
+        return view('usuarios.perfil', compact('usuario', 'prestamosActivos', 'historialPrestamos'));
+    }
+
+    public function actualizarPerfil(Request $request)
+    {
+        $usuario = auth()->user();
+        
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:100',
+            'apellido' => 'required|string|max:100',
+            'email' => 'required|email|max:150|unique:usuarios,email,' . $usuario->id,
+            'telefono' => 'nullable|string|max:20',
+            'direccion' => 'nullable|string'
+        ]);
+        
+        $usuario->update($validated);
+        
+        return redirect()->route('perfil')
+            ->with('success', 'Perfil actualizado exitosamente.');
+    }
 }

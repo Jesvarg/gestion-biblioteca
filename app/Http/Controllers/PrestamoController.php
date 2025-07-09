@@ -92,6 +92,13 @@ class PrestamoController extends Controller
         return view('prestamos.show', compact('prestamo'));
     }
 
+    public function edit(Prestamo $prestamo)
+    {
+        $prestamo->load(['usuario', 'libro.autor']);
+        
+        return view('prestamos.edit', compact('prestamo'));
+    }
+
     public function devolver(Request $request, Prestamo $prestamo)
     {
         if ($prestamo->estado !== 'activo') {
